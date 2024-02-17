@@ -10,4 +10,6 @@ public interface IProductService {
     ResponseEntity deleteById(long id);
 
     ResponseEntity update(ProductDto productDto,long id);
+    ResponseEntity findByName(String name);
+    ResponseEntity findByNameAndStockGreaterThan(String name);
 }
