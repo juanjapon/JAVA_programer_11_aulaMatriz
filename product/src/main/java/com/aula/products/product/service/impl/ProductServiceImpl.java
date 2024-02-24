@@ -2,10 +2,12 @@ package com.aula.products.product.service.impl;
 
 import com.aula.products.product.dto.ProductDto;
 import com.aula.products.product.exception.MyHandlerException;
+import com.aula.products.product.mapper.ProductMapper;
 import com.aula.products.product.model.ProductEntity;
 import com.aula.products.product.repository.ProductRepository;
 import com.aula.products.product.service.IProductService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -13,28 +15,29 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-
+@Slf4j
 @Service
 @AllArgsConstructor
 public class ProductServiceImpl implements IProductService {
     private final ProductRepository productRepo;
 
+
     @Override
     public ResponseEntity save(ProductDto productDto) {
-
+        var trackingId=productDto.getTrackingId();
+        log.info("getting status{}",trackingId);
         var productExist =this.productRepo.findByName(productDto.getName());
+        log.info("validate if the product already exist{}",trackingId);
         if(productExist.isPresent()){
             throw new MyHandlerException("the product name: "+productDto.getName()+" already exists ");
         }
-        ProductEntity productEntity=new ProductEntity();
-        productEntity.setName(productDto.getName());
-        productEntity.setDescription(productDto.getDescription());
-        productEntity.setStock(productDto.getStock());
-        productEntity.setPrice(productDto.getPrice());
-        productEntity.setCreatedAt(LocalDateTime.now());
+        log.info("mapping entity product {}",trackingId);
+        ProductEntity productEntity= ProductMapper.maptoEntity(productDto);
 
+        log.info("saving product{}",trackingId);
         var newProd=this.productRepo.save(productEntity);
 
+        log.info("product created{}",trackingId);
         return ResponseEntity.status(HttpStatus.CREATED).body(newProd);
     }
 

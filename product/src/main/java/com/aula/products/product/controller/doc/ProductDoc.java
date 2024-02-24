@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +38,7 @@ public interface ProductDoc {
             }
     )
     @PostMapping
-    ResponseEntity createProduct(@RequestBody ProductDto productDto);
+    ResponseEntity createProduct(@Valid @RequestBody ProductDto productDto);
     @Operation(
             summary = "Get list product",
             description = "This operation is for getting all products form dafity"
